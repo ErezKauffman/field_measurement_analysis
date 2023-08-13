@@ -1,0 +1,1572 @@
+
+
+    import numpy as np
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+
+    import os
+    os.getcwd()
+
+    'C:\\Users\\Work'
+
+    data=pd.read_csv('apple_measurements_mf_mg_2022.csv')
+    data
+
+         cultivar           variety        block tree_number  fruit_number  \
+    0       apple  golden delicious     gd_marom        1.00           1.0   
+    1       apple  golden delicious     gd_marom        1.00           2.0   
+    2       apple  golden delicious     gd_marom        1.00           3.0   
+    3       apple  golden delicious     gd_marom        1.00           4.0   
+    4       apple  golden delicious     gd_marom        1.00           5.0   
+    ...       ...               ...          ...         ...           ...   
+    7887    apple         pink lady  talca_chile        2.00          25.0   
+    7888    apple         pink lady  talca_chile        2.00          26.0   
+    7889    apple         pink lady  talca_chile        2.00          27.0   
+    7890    apple         pink lady  talca_chile        2.00          28.0   
+    7891    apple         pink lady  talca_chile        2.00          29.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              37.42              35.66      2022-06-08   
+    1              34.61              35.66      2022-06-08   
+    2              35.57              35.66      2022-06-08   
+    3              33.45              35.66      2022-06-08   
+    4              32.77              35.66      2022-06-08   
+    ...              ...                ...             ...   
+    7887           66.50              66.18      2021-05-07   
+    7888           67.71              66.18      2021-05-07   
+    7889           63.95              66.18      2021-05-07   
+    7890           61.06              66.18      2021-05-07   
+    7891           65.59              66.18      2021-05-07   
+
+          relative_mm_increment  absolute_mm increment  ...  \
+    0                       NaN                    NaN  ...   
+    1                       NaN                    NaN  ...   
+    2                       NaN                    NaN  ...   
+    3                       NaN                    NaN  ...   
+    4                       NaN                    NaN  ...   
+    ...                     ...                    ...  ...   
+    7887                   0.35                  16.25  ...   
+    7888                   0.74                  19.42  ...   
+    7889                   0.09                  17.57  ...   
+    7890                   0.08                  15.13  ...   
+    7891                   0.68                  16.07  ...   
+
+          relative_precipitation  monthly_precipitation relative_humidity  \
+    0                        NaN                    NaN               NaN   
+    1                        NaN                    NaN               NaN   
+    2                        NaN                    NaN               NaN   
+    3                        NaN                    NaN               NaN   
+    4                        NaN                    NaN               NaN   
+    ...                      ...                    ...               ...   
+    7887                     NaN                    NaN               NaN   
+    7888                     NaN                    NaN               NaN   
+    7889                     NaN                    NaN               NaN   
+    7890                     NaN                    NaN               NaN   
+    7891                     NaN                    NaN               NaN   
+
+         total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                NaN                       NaN        NaN   
+    1                                NaN                       NaN        NaN   
+    2                                NaN                       NaN        NaN   
+    3                                NaN                       NaN        NaN   
+    4                                NaN                       NaN        NaN   
+    ...                              ...                       ...        ...   
+    7887                             NaN                       NaN        NaN   
+    7888                             NaN                       NaN        NaN   
+    7889                             NaN                       NaN        NaN   
+    7890                             NaN                       NaN        NaN   
+    7891                             NaN                       NaN        NaN   
+
+          longitude  latitude  thinning_time  thinning_type  
+    0           NaN       NaN            NaN            NaN  
+    1           NaN       NaN            NaN            NaN  
+    2           NaN       NaN            NaN            NaN  
+    3           NaN       NaN            NaN            NaN  
+    4           NaN       NaN            NaN            NaN  
+    ...         ...       ...            ...            ...  
+    7887        NaN       NaN            NaN            NaN  
+    7888        NaN       NaN            NaN            NaN  
+    7889        NaN       NaN            NaN            NaN  
+    7890        NaN       NaN            NaN            NaN  
+    7891        NaN       NaN            NaN            NaN  
+
+    [7892 rows x 66 columns]
+
+    data.info()
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 7892 entries, 0 to 7891
+    Data columns (total 66 columns):
+     #   Column                           Non-Null Count  Dtype  
+    ---  ------                           --------------  -----  
+     0   cultivar                         7892 non-null   object 
+     1   variety                          7892 non-null   object 
+     2   block                            7892 non-null   object 
+     3   tree_number                      7892 non-null   object 
+     4   fruit_number                     7892 non-null   float64
+     5   fruit_diameter                   7774 non-null   float64
+     6   Av_fruit_diameter                7892 non-null   float64
+     7   date_of_measure                  7892 non-null   object 
+     8   relative_mm_increment            6505 non-null   float64
+     9   absolute_mm increment            6510 non-null   float64
+     10  days_increment                   6623 non-null   float64
+     11  relative_fruit_growth_rate       6503 non-null   float64
+     12  rootstock                        5500 non-null   object 
+     13  soil_type                        6000 non-null   object 
+     14  country                          7892 non-null   object 
+     15  location                         7892 non-null   object 
+     16  crop_load                        3041 non-null   float64
+     17  planting_distance_between_rows   7892 non-null   float64
+     18  planting_distance_within_rows    7892 non-null   float64
+     19  N.trees_per_dunam                7892 non-null   float64
+     20  N.fruit_per_dunam                3041 non-null   float64
+     21  tree_height                      6000 non-null   float64
+     22  tree_length                      6000 non-null   float64
+     23  tree_width                       6000 non-null   float64
+     24  tree_area                        6000 non-null   float64
+     25  normalized_crop_load             2625 non-null   float64
+     26  training_system                  7892 non-null   object 
+     27  row_direction                    6000 non-null   object 
+     28  tree_age                         4425 non-null   float64
+     29  fertilization_type               2425 non-null   object 
+     30  fertilization_quantity           2425 non-null   object 
+     31  irrigation_regime                3739 non-null   float64
+     32  leaf_area_index                  0 non-null      float64
+     33  ndvi                             0 non-null      float64
+     34  humidity                         0 non-null      float64
+     35  water_potential                  0 non-null      float64
+     36  sap_flow                         0 non-null      float64
+     37  hormone_application_type         0 non-null      float64
+     38  hormone_application_quantity     0 non-null      float64
+     39  spray_type                       0 non-null      float64
+     40  spray_quantity                   0 non-null      float64
+     41  orchard_area                     0 non-null      float64
+     42  estimated_date_of_full_bloom     3375 non-null   object 
+     43  pruning_type                     0 non-null      float64
+     44  gridling_number                  0 non-null      float64
+     45  relative_heat_sum                0 non-null      float64
+     46  heat_sum_units_march_june        0 non-null      float64
+     47  heat_sum_units_per_month         0 non-null      float64
+     48  total_heat_sum_units             0 non-null      float64
+     49  relative_av_temp                 0 non-null      float64
+     50  av_monthly_temp                  0 non-null      float64
+     51  relative_gdd_13                  0 non-null      float64
+     52  monthly_gdd_13_sum               0 non-null      float64
+     53  accumulates_gdd_13               0 non-null      float64
+     54  relative_ehu_27_35               0 non-null      float64
+     55  monthly_ehu_27_35                0 non-null      float64
+     56  relative_precipitation           0 non-null      float64
+     57  monthly_precipitation            0 non-null      float64
+     58  relative_humidity                0 non-null      float64
+     59  total_relative_radiation(Mj/m2)  0 non-null      float64
+     60  total_radiation_per_month        0 non-null      float64
+     61  peel_color                       0 non-null      float64
+     62  longitude                        0 non-null      float64
+     63  latitude                         0 non-null      float64
+     64  thinning_time                    5 non-null      object 
+     65  thinning_type                    5 non-null      object 
+    dtypes: float64(50), object(16)
+    memory usage: 4.0+ MB
+
+    #create date of year column 
+    data['date_of_measure'] = pd.to_datetime(data['date_of_measure'], format='%Y-%m-%d')
+    data['doy']= data['date_of_measure'].dt.dayofyear
+    data
+
+         cultivar           variety        block tree_number  fruit_number  \
+    0       apple  golden delicious     gd_marom        1.00           1.0   
+    1       apple  golden delicious     gd_marom        1.00           2.0   
+    2       apple  golden delicious     gd_marom        1.00           3.0   
+    3       apple  golden delicious     gd_marom        1.00           4.0   
+    4       apple  golden delicious     gd_marom        1.00           5.0   
+    ...       ...               ...          ...         ...           ...   
+    7887    apple         pink lady  talca_chile        2.00          25.0   
+    7888    apple         pink lady  talca_chile        2.00          26.0   
+    7889    apple         pink lady  talca_chile        2.00          27.0   
+    7890    apple         pink lady  talca_chile        2.00          28.0   
+    7891    apple         pink lady  talca_chile        2.00          29.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              37.42              35.66      2022-06-08   
+    1              34.61              35.66      2022-06-08   
+    2              35.57              35.66      2022-06-08   
+    3              33.45              35.66      2022-06-08   
+    4              32.77              35.66      2022-06-08   
+    ...              ...                ...             ...   
+    7887           66.50              66.18      2021-05-07   
+    7888           67.71              66.18      2021-05-07   
+    7889           63.95              66.18      2021-05-07   
+    7890           61.06              66.18      2021-05-07   
+    7891           65.59              66.18      2021-05-07   
+
+          relative_mm_increment  absolute_mm increment  ...  \
+    0                       NaN                    NaN  ...   
+    1                       NaN                    NaN  ...   
+    2                       NaN                    NaN  ...   
+    3                       NaN                    NaN  ...   
+    4                       NaN                    NaN  ...   
+    ...                     ...                    ...  ...   
+    7887                   0.35                  16.25  ...   
+    7888                   0.74                  19.42  ...   
+    7889                   0.09                  17.57  ...   
+    7890                   0.08                  15.13  ...   
+    7891                   0.68                  16.07  ...   
+
+          monthly_precipitation  relative_humidity  \
+    0                       NaN                NaN   
+    1                       NaN                NaN   
+    2                       NaN                NaN   
+    3                       NaN                NaN   
+    4                       NaN                NaN   
+    ...                     ...                ...   
+    7887                    NaN                NaN   
+    7888                    NaN                NaN   
+    7889                    NaN                NaN   
+    7890                    NaN                NaN   
+    7891                    NaN                NaN   
+
+         total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                NaN                       NaN        NaN   
+    1                                NaN                       NaN        NaN   
+    2                                NaN                       NaN        NaN   
+    3                                NaN                       NaN        NaN   
+    4                                NaN                       NaN        NaN   
+    ...                              ...                       ...        ...   
+    7887                             NaN                       NaN        NaN   
+    7888                             NaN                       NaN        NaN   
+    7889                             NaN                       NaN        NaN   
+    7890                             NaN                       NaN        NaN   
+    7891                             NaN                       NaN        NaN   
+
+         longitude  latitude  thinning_time  thinning_type  doy  
+    0          NaN       NaN            NaN            NaN  159  
+    1          NaN       NaN            NaN            NaN  159  
+    2          NaN       NaN            NaN            NaN  159  
+    3          NaN       NaN            NaN            NaN  159  
+    4          NaN       NaN            NaN            NaN  159  
+    ...        ...       ...            ...            ...  ...  
+    7887       NaN       NaN            NaN            NaN  127  
+    7888       NaN       NaN            NaN            NaN  127  
+    7889       NaN       NaN            NaN            NaN  127  
+    7890       NaN       NaN            NaN            NaN  127  
+    7891       NaN       NaN            NaN            NaN  127  
+
+    [7892 rows x 67 columns]
+
+    #change DOY for blocks from the southern hemisphere to Northen hemisphere timezone
+    #add 183 days to models from the southern hemisphere to compare in same DOY but keep the doy from 1-365
+    for index, row in data.iterrows():
+        if row['country'] == 'chile':
+            new_doy = row['doy'] + 183
+            if new_doy > 365:
+                new_doy = new_doy - 365
+            data.at[index, 'doy'] = new_doy
+
+    data
+
+         cultivar           variety        block tree_number  fruit_number  \
+    0       apple  golden delicious     gd_marom        1.00           1.0   
+    1       apple  golden delicious     gd_marom        1.00           2.0   
+    2       apple  golden delicious     gd_marom        1.00           3.0   
+    3       apple  golden delicious     gd_marom        1.00           4.0   
+    4       apple  golden delicious     gd_marom        1.00           5.0   
+    ...       ...               ...          ...         ...           ...   
+    7887    apple         pink lady  talca_chile        2.00          25.0   
+    7888    apple         pink lady  talca_chile        2.00          26.0   
+    7889    apple         pink lady  talca_chile        2.00          27.0   
+    7890    apple         pink lady  talca_chile        2.00          28.0   
+    7891    apple         pink lady  talca_chile        2.00          29.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              37.42              35.66      2022-06-08   
+    1              34.61              35.66      2022-06-08   
+    2              35.57              35.66      2022-06-08   
+    3              33.45              35.66      2022-06-08   
+    4              32.77              35.66      2022-06-08   
+    ...              ...                ...             ...   
+    7887           66.50              66.18      2021-05-07   
+    7888           67.71              66.18      2021-05-07   
+    7889           63.95              66.18      2021-05-07   
+    7890           61.06              66.18      2021-05-07   
+    7891           65.59              66.18      2021-05-07   
+
+          relative_mm_increment  absolute_mm increment  ...  \
+    0                       NaN                    NaN  ...   
+    1                       NaN                    NaN  ...   
+    2                       NaN                    NaN  ...   
+    3                       NaN                    NaN  ...   
+    4                       NaN                    NaN  ...   
+    ...                     ...                    ...  ...   
+    7887                   0.35                  16.25  ...   
+    7888                   0.74                  19.42  ...   
+    7889                   0.09                  17.57  ...   
+    7890                   0.08                  15.13  ...   
+    7891                   0.68                  16.07  ...   
+
+          monthly_precipitation  relative_humidity  \
+    0                       NaN                NaN   
+    1                       NaN                NaN   
+    2                       NaN                NaN   
+    3                       NaN                NaN   
+    4                       NaN                NaN   
+    ...                     ...                ...   
+    7887                    NaN                NaN   
+    7888                    NaN                NaN   
+    7889                    NaN                NaN   
+    7890                    NaN                NaN   
+    7891                    NaN                NaN   
+
+         total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                NaN                       NaN        NaN   
+    1                                NaN                       NaN        NaN   
+    2                                NaN                       NaN        NaN   
+    3                                NaN                       NaN        NaN   
+    4                                NaN                       NaN        NaN   
+    ...                              ...                       ...        ...   
+    7887                             NaN                       NaN        NaN   
+    7888                             NaN                       NaN        NaN   
+    7889                             NaN                       NaN        NaN   
+    7890                             NaN                       NaN        NaN   
+    7891                             NaN                       NaN        NaN   
+
+         longitude  latitude  thinning_time  thinning_type  doy  
+    0          NaN       NaN            NaN            NaN  159  
+    1          NaN       NaN            NaN            NaN  159  
+    2          NaN       NaN            NaN            NaN  159  
+    3          NaN       NaN            NaN            NaN  159  
+    4          NaN       NaN            NaN            NaN  159  
+    ...        ...       ...            ...            ...  ...  
+    7887       NaN       NaN            NaN            NaN  310  
+    7888       NaN       NaN            NaN            NaN  310  
+    7889       NaN       NaN            NaN            NaN  310  
+    7890       NaN       NaN            NaN            NaN  310  
+    7891       NaN       NaN            NaN            NaN  310  
+
+    [7892 rows x 67 columns]
+
+    #replace negative or zero values with NAN and fill empty cells with NAN
+    data['relative_fruit_growth_rate'] = data['relative_fruit_growth_rate'].where(data['relative_fruit_growth_rate'] > 0, np.nan)
+    data['relative_fruit_growth_rate'] = data['relative_fruit_growth_rate'].fillna(value=np.nan)
+    data['Av_fruit_diameter'] = data['Av_fruit_diameter'].where(data['Av_fruit_diameter'] > 0, np.nan)
+    data['Av_fruit_diameter'] = data['Av_fruit_diameter'].fillna(value=np.nan)
+    data['relative_mm_increment'] = data['relative_mm_increment'].where(data['relative_mm_increment'] > 0, np.nan)
+    data['relative_mm_increment'] = data['relative_mm_increment'].fillna(value=np.nan)
+    data['absolute_mm increment'] = data['absolute_mm increment'].where(data['absolute_mm increment'] > 0, np.nan)
+    data['absolute_mm increment'] = data['absolute_mm increment'].fillna(value=np.nan)
+    #fill with NAN empty values
+    data['days_increment'] = data['days_increment'].fillna(value=np.nan)
+
+    #create another column with month range
+    def group_date_of_year(x):
+        if x>=151 and x<=181:
+            return 'june'
+        elif x>=182 and x<=213:
+            return 'july'
+        elif x>=243 and x<=273:
+            return 'sep' 
+        elif x>=274 and x<=304:
+            return 'oct'
+        elif x>=305 and x<=334:
+            return 'nov'
+        elif x>=335 and x<=366:
+            return 'dec'
+        elif x>=1 and x<=30:
+            return 'jan'
+        elif x>=31 and x<=60:
+            return 'feb'
+        elif x>=61 and x<=91:
+            return 'march'
+        elif x>=92 and x<=122:
+            return 'april'
+
+    data['date_of_year_group'] = data['doy'].apply(group_date_of_year)
+    data
+
+         cultivar           variety        block tree_number  fruit_number  \
+    0       apple  golden delicious     gd_marom        1.00           1.0   
+    1       apple  golden delicious     gd_marom        1.00           2.0   
+    2       apple  golden delicious     gd_marom        1.00           3.0   
+    3       apple  golden delicious     gd_marom        1.00           4.0   
+    4       apple  golden delicious     gd_marom        1.00           5.0   
+    ...       ...               ...          ...         ...           ...   
+    7887    apple         pink lady  talca_chile        2.00          25.0   
+    7888    apple         pink lady  talca_chile        2.00          26.0   
+    7889    apple         pink lady  talca_chile        2.00          27.0   
+    7890    apple         pink lady  talca_chile        2.00          28.0   
+    7891    apple         pink lady  talca_chile        2.00          29.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              37.42              35.66      2022-06-08   
+    1              34.61              35.66      2022-06-08   
+    2              35.57              35.66      2022-06-08   
+    3              33.45              35.66      2022-06-08   
+    4              32.77              35.66      2022-06-08   
+    ...              ...                ...             ...   
+    7887           66.50              66.18      2021-05-07   
+    7888           67.71              66.18      2021-05-07   
+    7889           63.95              66.18      2021-05-07   
+    7890           61.06              66.18      2021-05-07   
+    7891           65.59              66.18      2021-05-07   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    0                       NaN                    NaN  ...                NaN   
+    1                       NaN                    NaN  ...                NaN   
+    2                       NaN                    NaN  ...                NaN   
+    3                       NaN                    NaN  ...                NaN   
+    4                       NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    7887                   0.35                  16.25  ...                NaN   
+    7888                   0.74                  19.42  ...                NaN   
+    7889                   0.09                  17.57  ...                NaN   
+    7890                   0.08                  15.13  ...                NaN   
+    7891                   0.68                  16.07  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                 NaN                       NaN        NaN   
+    1                                 NaN                       NaN        NaN   
+    2                                 NaN                       NaN        NaN   
+    3                                 NaN                       NaN        NaN   
+    4                                 NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    7887                              NaN                       NaN        NaN   
+    7888                              NaN                       NaN        NaN   
+    7889                              NaN                       NaN        NaN   
+    7890                              NaN                       NaN        NaN   
+    7891                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    0          NaN      NaN            NaN            NaN  159                june  
+    1          NaN      NaN            NaN            NaN  159                june  
+    2          NaN      NaN            NaN            NaN  159                june  
+    3          NaN      NaN            NaN            NaN  159                june  
+    4          NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    7887       NaN      NaN            NaN            NaN  310                 nov  
+    7888       NaN      NaN            NaN            NaN  310                 nov  
+    7889       NaN      NaN            NaN            NaN  310                 nov  
+    7890       NaN      NaN            NaN            NaN  310                 nov  
+    7891       NaN      NaN            NaN            NaN  310                 nov  
+
+    [7892 rows x 68 columns]
+
+    #Golden Delicious at marom Golan
+    gd_marom= data[data['block'].str.contains("gd_marom")]
+    gd_marom
+
+        cultivar           variety     block tree_number  fruit_number  \
+    0      apple  golden delicious  gd_marom        1.00           1.0   
+    1      apple  golden delicious  gd_marom        1.00           2.0   
+    2      apple  golden delicious  gd_marom        1.00           3.0   
+    3      apple  golden delicious  gd_marom        1.00           4.0   
+    4      apple  golden delicious  gd_marom        1.00           5.0   
+    ..       ...               ...       ...         ...           ...   
+    870    apple  golden delicious  gd_marom      random          96.0   
+    871    apple  golden delicious  gd_marom      random          97.0   
+    872    apple  golden delicious  gd_marom      random          98.0   
+    873    apple  golden delicious  gd_marom      random          99.0   
+    874    apple  golden delicious  gd_marom      random         100.0   
+
+         fruit_diameter  Av_fruit_diameter date_of_measure  relative_mm_increment  \
+    0             37.42              35.66      2022-06-08                    NaN   
+    1             34.61              35.66      2022-06-08                    NaN   
+    2             35.57              35.66      2022-06-08                    NaN   
+    3             33.45              35.66      2022-06-08                    NaN   
+    4             32.77              35.66      2022-06-08                    NaN   
+    ..              ...                ...             ...                    ...   
+    870           73.20              77.28      2022-08-30                   1.71   
+    871           74.08              77.28      2022-08-30                   1.71   
+    872           73.38              77.28      2022-08-30                   1.71   
+    873           74.24              77.28      2022-08-30                   1.71   
+    874           71.85              77.28      2022-08-30                   1.71   
+
+         absolute_mm increment  ...  relative_humidity  \
+    0                      NaN  ...                NaN   
+    1                      NaN  ...                NaN   
+    2                      NaN  ...                NaN   
+    3                      NaN  ...                NaN   
+    4                      NaN  ...                NaN   
+    ..                     ...  ...                ...   
+    870                  41.63  ...                NaN   
+    871                  41.63  ...                NaN   
+    872                  41.63  ...                NaN   
+    873                  41.63  ...                NaN   
+    874                  41.63  ...                NaN   
+
+         total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                NaN                       NaN        NaN   
+    1                                NaN                       NaN        NaN   
+    2                                NaN                       NaN        NaN   
+    3                                NaN                       NaN        NaN   
+    4                                NaN                       NaN        NaN   
+    ..                               ...                       ...        ...   
+    870                              NaN                       NaN        NaN   
+    871                              NaN                       NaN        NaN   
+    872                              NaN                       NaN        NaN   
+    873                              NaN                       NaN        NaN   
+    874                              NaN                       NaN        NaN   
+
+        longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    0         NaN      NaN            NaN            NaN  159                june  
+    1         NaN      NaN            NaN            NaN  159                june  
+    2         NaN      NaN            NaN            NaN  159                june  
+    3         NaN      NaN            NaN            NaN  159                june  
+    4         NaN      NaN            NaN            NaN  159                june  
+    ..        ...      ...            ...            ...  ...                 ...  
+    870       NaN      NaN            NaN            NaN  242                None  
+    871       NaN      NaN            NaN            NaN  242                None  
+    872       NaN      NaN            NaN            NaN  242                None  
+    873       NaN      NaN            NaN            NaN  242                None  
+    874       NaN      NaN            NaN            NaN  242                None  
+
+    [875 rows x 68 columns]
+
+    def growth_by_season(df, date, size, load, degree=2):
+        sns.set(style='whitegrid')
+        
+        if load in df.columns:
+            df_with_load = df[df[load].notnull()]
+            df_without_load = df[df[load].isnull()]
+            
+            sns.lmplot(x=date, y=size, hue=load, data=df_with_load, order=degree)
+            sns.lmplot(x=date, y=size, data=df_without_load, order=degree, scatter=False)
+        else:
+            sns.lmplot(x=date, y=size, data=df, order=degree)
+        
+        plt.xlabel('DOY')
+        plt.ylabel('Av_size')
+        plt.title('Av fruit diameter')
+        plt.rcParams["figure.figsize"] = (20, 16)
+        plt.show()
+
+
+        
+        
+
+    growth_by_season(gd_marom,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    def Relative_growth_rate(df,date,size,load):
+        sns.set(style='whitegrid')
+        sns.boxplot(x=date, y=size, data=df, hue=load)
+        plt.xlabel('DOY')
+        plt.ylabel('RGR mm/day')
+        plt.title('relative growth rate by DOY in different crop load')
+        plt.rcParams["figure.figsize"] = (15, 12)
+        #plt.savefig('size by date golden delicious', format='jpeg')
+        plt.show()
+
+    Relative_growth_rate(gd_marom,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #golden delicious at marom golan and Matityahu farm
+    gd_marom_matityahu= data[data['variety'].str.contains("golden")]
+    gd_marom_matityahu                                                      
+
+         cultivar                   variety          block tree_number  \
+    0       apple          golden delicious       gd_marom        1.00   
+    1       apple          golden delicious       gd_marom        1.00   
+    2       apple          golden delicious       gd_marom        1.00   
+    3       apple          golden delicious       gd_marom        1.00   
+    4       apple          golden delicious       gd_marom        1.00   
+    ...       ...                       ...            ...         ...   
+    3570    apple  golden delicious smoothy  GDS_matityahu      RANDOM   
+    3571    apple  golden delicious smoothy  GDS_matityahu      RANDOM   
+    3572    apple  golden delicious smoothy  GDS_matityahu      RANDOM   
+    3573    apple  golden delicious smoothy  GDS_matityahu      RANDOM   
+    3574    apple  golden delicious smoothy  GDS_matityahu      RANDOM   
+
+          fruit_number  fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              1.0           37.42              35.66      2022-06-08   
+    1              2.0           34.61              35.66      2022-06-08   
+    2              3.0           35.57              35.66      2022-06-08   
+    3              4.0           33.45              35.66      2022-06-08   
+    4              5.0           32.77              35.66      2022-06-08   
+    ...            ...             ...                ...             ...   
+    3570          96.0           68.84              68.37      2022-09-06   
+    3571          97.0           59.74              68.37      2022-09-06   
+    3572          98.0           74.26              68.37      2022-09-06   
+    3573          99.0           69.84              68.37      2022-09-06   
+    3574         100.0           72.65              68.37      2022-09-06   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    0                       NaN                    NaN  ...                NaN   
+    1                       NaN                    NaN  ...                NaN   
+    2                       NaN                    NaN  ...                NaN   
+    3                       NaN                    NaN  ...                NaN   
+    4                       NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    3570                   2.75                  22.28  ...                NaN   
+    3571                   2.75                  22.28  ...                NaN   
+    3572                   2.75                  22.28  ...                NaN   
+    3573                   2.75                  22.28  ...                NaN   
+    3574                   2.75                  22.28  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                 NaN                       NaN        NaN   
+    1                                 NaN                       NaN        NaN   
+    2                                 NaN                       NaN        NaN   
+    3                                 NaN                       NaN        NaN   
+    4                                 NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    3570                              NaN                       NaN        NaN   
+    3571                              NaN                       NaN        NaN   
+    3572                              NaN                       NaN        NaN   
+    3573                              NaN                       NaN        NaN   
+    3574                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    0          NaN      NaN            NaN            NaN  159                june  
+    1          NaN      NaN            NaN            NaN  159                june  
+    2          NaN      NaN            NaN            NaN  159                june  
+    3          NaN      NaN            NaN            NaN  159                june  
+    4          NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    3570       NaN      NaN            NaN            NaN  249                 sep  
+    3571       NaN      NaN            NaN            NaN  249                 sep  
+    3572       NaN      NaN            NaN            NaN  249                 sep  
+    3573       NaN      NaN            NaN            NaN  249                 sep  
+    3574       NaN      NaN            NaN            NaN  249                 sep  
+
+    [1825 rows x 68 columns]
+
+    growth_by_season(gd_marom_matityahu,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(gd_marom_matityahu,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #in the beginning of the season(june/july) differences in RGR are not so visible in golden delicious
+    #differences in RGR are more visible thorugh july/august in Golden Delicious
+
+    def AGR_ratio(df):
+        lower_threshold= df[df['crop_load']<138]
+        low_rgr= lower_threshold.groupby('crop_load')["relative_fruit_growth_rate"].mean().reset_index()
+        mid_threshold= df[(df['crop_load']>138) & (df['crop_load']<237)]
+        mid_rgr=mid_threshold.groupby('crop_load')["relative_fruit_growth_rate"].mean().reset_index()
+        higher_threshold= df[df['crop_load']>237]
+        high_rgr= higher_threshold.groupby('crop_load')["relative_fruit_growth_rate"].mean().reset_index()
+        low_mid_ratio=low_rgr.mean() / mid_rgr.mean() 
+        low_high_ratio=low_rgr.mean() / high_rgr.mean() 
+        mid_high_ratio=mid_rgr.mean() / high_rgr.mean() 
+        rgr_ratio_table=pd.DataFrame({'low_Agr':low_rgr['relative_fruit_growth_rate'] , 'mid_Agr':mid_rgr['relative_fruit_growth_rate'],
+                                      'high_Agr':high_rgr['relative_fruit_growth_rate'], 'low_mid_ratio':low_mid_ratio,
+                                     'low_high_ratio':low_high_ratio,'mid_high_ratio':mid_high_ratio})
+        return rgr_ratio_table
+
+    AGR_ratio(gd_marom_matityahu)
+
+                                 low_Agr   mid_Agr  high_Agr  low_mid_ratio  \
+    0                           0.501100  0.397355       NaN            NaN   
+    1                           0.516300  0.420738       NaN            NaN   
+    2                           0.492800       NaN       NaN            NaN   
+    3                           0.435083       NaN       NaN            NaN   
+    crop_load                        NaN       NaN       NaN       0.422619   
+    relative_fruit_growth_rate       NaN       NaN       NaN       1.188913   
+
+                                low_high_ratio  mid_high_ratio  
+    0                                      NaN             NaN  
+    1                                      NaN             NaN  
+    2                                      NaN             NaN  
+    3                                      NaN             NaN  
+    crop_load                              NaN             NaN  
+    relative_fruit_growth_rate             NaN             NaN  
+
+    #av ratio between the AGR of low to mid crop load in Golden Delicious apple is 1.18
+
+    #lets see it for honey crisp in chile
+    #got the same picking date as golden delicious
+
+    honey_crisp_chile= data[data['variety'].str.contains('honey')]
+    honey_crisp_chile
+
+         cultivar      variety         block tree_number  fruit_number  \
+    6000    apple  honey_crisp  temuco_chile        1.00           1.0   
+    6001    apple  honey_crisp  temuco_chile        1.00           2.0   
+    6002    apple  honey_crisp  temuco_chile        1.00           3.0   
+    6003    apple  honey_crisp  temuco_chile        1.00           4.0   
+    6004    apple  honey_crisp  temuco_chile        1.00           5.0   
+    ...       ...          ...           ...         ...           ...   
+    6411    apple  honey_crisp  temuco_chile        2.00          23.0   
+    6412    apple  honey_crisp  temuco_chile        2.00          24.0   
+    6413    apple  honey_crisp  temuco_chile        2.00          25.0   
+    6414    apple  honey_crisp  temuco_chile        2.00          26.0   
+    6415    apple  honey_crisp  temuco_chile        2.00          27.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    6000           52.79              51.29      2021-12-29   
+    6001           50.26              51.29      2021-12-29   
+    6002           55.38              51.29      2021-12-29   
+    6003           41.47              51.29      2021-12-29   
+    6004           55.66              51.29      2021-12-29   
+    ...              ...                ...             ...   
+    6411           76.50              78.09      2022-03-07   
+    6412           80.51              78.09      2022-03-07   
+    6413           69.18              78.09      2022-03-07   
+    6414           74.74              78.09      2022-03-07   
+    6415           75.80              78.09      2022-03-07   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    6000                    NaN                    NaN  ...                NaN   
+    6001                    NaN                    NaN  ...                NaN   
+    6002                    NaN                    NaN  ...                NaN   
+    6003                    NaN                    NaN  ...                NaN   
+    6004                    NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    6411                   1.31                  28.78  ...                NaN   
+    6412                   1.88                  29.11  ...                NaN   
+    6413                   1.93                  31.87  ...                NaN   
+    6414                   1.49                  30.85  ...                NaN   
+    6415                   2.18                  30.36  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    6000                              NaN                       NaN        NaN   
+    6001                              NaN                       NaN        NaN   
+    6002                              NaN                       NaN        NaN   
+    6003                              NaN                       NaN        NaN   
+    6004                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    6411                              NaN                       NaN        NaN   
+    6412                              NaN                       NaN        NaN   
+    6413                              NaN                       NaN        NaN   
+    6414                              NaN                       NaN        NaN   
+    6415                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    6000       NaN      NaN            NaN            NaN  181                june  
+    6001       NaN      NaN            NaN            NaN  181                june  
+    6002       NaN      NaN            NaN            NaN  181                june  
+    6003       NaN      NaN            NaN            NaN  181                june  
+    6004       NaN      NaN            NaN            NaN  181                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    6411       NaN      NaN            NaN            NaN  249                 sep  
+    6412       NaN      NaN            NaN            NaN  249                 sep  
+    6413       NaN      NaN            NaN            NaN  249                 sep  
+    6414       NaN      NaN            NaN            NaN  249                 sep  
+    6415       NaN      NaN            NaN            NaN  249                 sep  
+
+    [416 rows x 68 columns]
+
+    growth_by_season(honey_crisp_chile,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(honey_crisp_chile,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #lets compare golden delicious in matityahu farm and in marom golan (picking at 06/09 matityahu, 30/08 marom golan)
+    #and honey crisp in talca,chile (picking at 07/03)
+
+    mg_mf_honey= data[data['variety'].str.contains('honey|golden')]
+    mg_mf_honey
+
+         cultivar           variety         block tree_number  fruit_number  \
+    0       apple  golden delicious      gd_marom        1.00           1.0   
+    1       apple  golden delicious      gd_marom        1.00           2.0   
+    2       apple  golden delicious      gd_marom        1.00           3.0   
+    3       apple  golden delicious      gd_marom        1.00           4.0   
+    4       apple  golden delicious      gd_marom        1.00           5.0   
+    ...       ...               ...           ...         ...           ...   
+    6411    apple       honey_crisp  temuco_chile        2.00          23.0   
+    6412    apple       honey_crisp  temuco_chile        2.00          24.0   
+    6413    apple       honey_crisp  temuco_chile        2.00          25.0   
+    6414    apple       honey_crisp  temuco_chile        2.00          26.0   
+    6415    apple       honey_crisp  temuco_chile        2.00          27.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    0              37.42              35.66      2022-06-08   
+    1              34.61              35.66      2022-06-08   
+    2              35.57              35.66      2022-06-08   
+    3              33.45              35.66      2022-06-08   
+    4              32.77              35.66      2022-06-08   
+    ...              ...                ...             ...   
+    6411           76.50              78.09      2022-03-07   
+    6412           80.51              78.09      2022-03-07   
+    6413           69.18              78.09      2022-03-07   
+    6414           74.74              78.09      2022-03-07   
+    6415           75.80              78.09      2022-03-07   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    0                       NaN                    NaN  ...                NaN   
+    1                       NaN                    NaN  ...                NaN   
+    2                       NaN                    NaN  ...                NaN   
+    3                       NaN                    NaN  ...                NaN   
+    4                       NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    6411                   1.31                  28.78  ...                NaN   
+    6412                   1.88                  29.11  ...                NaN   
+    6413                   1.93                  31.87  ...                NaN   
+    6414                   1.49                  30.85  ...                NaN   
+    6415                   2.18                  30.36  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    0                                 NaN                       NaN        NaN   
+    1                                 NaN                       NaN        NaN   
+    2                                 NaN                       NaN        NaN   
+    3                                 NaN                       NaN        NaN   
+    4                                 NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    6411                              NaN                       NaN        NaN   
+    6412                              NaN                       NaN        NaN   
+    6413                              NaN                       NaN        NaN   
+    6414                              NaN                       NaN        NaN   
+    6415                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    0          NaN      NaN            NaN            NaN  159                june  
+    1          NaN      NaN            NaN            NaN  159                june  
+    2          NaN      NaN            NaN            NaN  159                june  
+    3          NaN      NaN            NaN            NaN  159                june  
+    4          NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    6411       NaN      NaN            NaN            NaN  249                 sep  
+    6412       NaN      NaN            NaN            NaN  249                 sep  
+    6413       NaN      NaN            NaN            NaN  249                 sep  
+    6414       NaN      NaN            NaN            NaN  249                 sep  
+    6415       NaN      NaN            NaN            NaN  249                 sep  
+
+    [2241 rows x 68 columns]
+
+    growth_by_season(mg_mf_honey,'doy','Av_fruit_diameter','block', degree=2)
+
+[]
+
+[]
+
+    #Golden Delicious and honey crisp picked in the same season, but the varieties growth characteristic is different
+    #it's not possible to estimate golden delicious using honey crisp- variety filter is needed
+    #small fruit of honey crisp become big fruit at the end of the season
+
+    Relative_growth_rate(mg_mf_honey,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #from doy 234/236 fruit growth rate of the tree with 116 fruits/tree in honey crisp grow faster than the 93 fruit/tree 
+    #from this date also the golden delicious growth rate is faster, although the high number of fruits/tree, mainly due to irrigation
+    #204 cube/dunam per month in Golden delicious vs 59.2 in honey crisp in aug
+
+    #let's see gala at marom golan
+
+    gala_marom=data[data['block'].str.contains('gala_marom')]
+    gala_marom
+
+         cultivar variety       block tree_number  fruit_number  fruit_diameter  \
+    1925    apple    gala  gala_marom        1.00           1.0           33.31   
+    1926    apple    gala  gala_marom        1.00           2.0           38.07   
+    1927    apple    gala  gala_marom        1.00           3.0           36.12   
+    1928    apple    gala  gala_marom        1.00           4.0           37.15   
+    1929    apple    gala  gala_marom        1.00           5.0           41.56   
+    ...       ...     ...         ...         ...           ...             ...   
+    2620    apple    gala  gala_marom      random          96.0           63.43   
+    2621    apple    gala  gala_marom      random          97.0           62.50   
+    2622    apple    gala  gala_marom      random          98.0           63.08   
+    2623    apple    gala  gala_marom      random          99.0           63.61   
+    2624    apple    gala  gala_marom      random         100.0           70.06   
+
+          Av_fruit_diameter date_of_measure  relative_mm_increment  \
+    1925              35.99      2022-06-08                    NaN   
+    1926              35.99      2022-06-08                    NaN   
+    1927              35.99      2022-06-08                    NaN   
+    1928              35.99      2022-06-08                    NaN   
+    1929              35.99      2022-06-08                    NaN   
+    ...                 ...             ...                    ...   
+    2620              64.58      2022-08-02                    7.2   
+    2621              64.58      2022-08-02                    7.2   
+    2622              64.58      2022-08-02                    7.2   
+    2623              64.58      2022-08-02                    7.2   
+    2624              64.58      2022-08-02                    7.2   
+
+          absolute_mm increment  ...  relative_humidity  \
+    1925                    NaN  ...                NaN   
+    1926                    NaN  ...                NaN   
+    1927                    NaN  ...                NaN   
+    1928                    NaN  ...                NaN   
+    1929                    NaN  ...                NaN   
+    ...                     ...  ...                ...   
+    2620                  28.62  ...                NaN   
+    2621                  28.62  ...                NaN   
+    2622                  28.62  ...                NaN   
+    2623                  28.62  ...                NaN   
+    2624                  28.62  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    1925                              NaN                       NaN        NaN   
+    1926                              NaN                       NaN        NaN   
+    1927                              NaN                       NaN        NaN   
+    1928                              NaN                       NaN        NaN   
+    1929                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    2620                              NaN                       NaN        NaN   
+    2621                              NaN                       NaN        NaN   
+    2622                              NaN                       NaN        NaN   
+    2623                              NaN                       NaN        NaN   
+    2624                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    1925       NaN      NaN            NaN            NaN  159                june  
+    1926       NaN      NaN            NaN            NaN  159                june  
+    1927       NaN      NaN            NaN            NaN  159                june  
+    1928       NaN      NaN            NaN            NaN  159                june  
+    1929       NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    2620       NaN      NaN            NaN            NaN  214                None  
+    2621       NaN      NaN            NaN            NaN  214                None  
+    2622       NaN      NaN            NaN            NaN  214                None  
+    2623       NaN      NaN            NaN            NaN  214                None  
+    2624       NaN      NaN            NaN            NaN  214                None  
+
+    [700 rows x 68 columns]
+
+    growth_by_season(gala_marom,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    #although there are more fruits in the tree with 130 fruits/tree, his growth rate is faster due to bigger size at the beginning of the season
+
+    Relative_growth_rate(gala_marom,'doy','relative_fruit_growth_rate','crop_load')
+
+[]
+
+    #let's compare gala at marom golan (picking 02/08 ) and gala at chile (12/02)
+    #there is no crop load data for gala chile
+
+    gala_chile_marom=data[data['variety'].str.contains('gala')]
+    gala_chile_marom
+
+         cultivar variety       block tree_number  fruit_number  fruit_diameter  \
+    1925    apple    gala  gala_marom        1.00           1.0           33.31   
+    1926    apple    gala  gala_marom        1.00           2.0           38.07   
+    1927    apple    gala  gala_marom        1.00           3.0           36.12   
+    1928    apple    gala  gala_marom        1.00           4.0           37.15   
+    1929    apple    gala  gala_marom        1.00           5.0           41.56   
+    ...       ...     ...         ...         ...           ...             ...   
+    6611    apple    gala      tree_2        2.00          21.0           63.36   
+    6612    apple    gala      tree_2        2.00          22.0           70.05   
+    6613    apple    gala      tree_2        2.00          23.0             NaN   
+    6614    apple    gala      tree_2        2.00          24.0             NaN   
+    6615    apple    gala      tree_2        2.00          25.0           60.60   
+
+          Av_fruit_diameter date_of_measure  relative_mm_increment  \
+    1925              35.99      2022-06-08                    NaN   
+    1926              35.99      2022-06-08                    NaN   
+    1927              35.99      2022-06-08                    NaN   
+    1928              35.99      2022-06-08                    NaN   
+    1929              35.99      2022-06-08                    NaN   
+    ...                 ...             ...                    ...   
+    6611              66.84      2021-02-12                   2.91   
+    6612              66.84      2021-02-12                   7.73   
+    6613              66.84      2021-02-12                    NaN   
+    6614              66.84      2021-02-12                    NaN   
+    6615              66.84      2021-02-12                   2.28   
+
+          absolute_mm increment  ...  relative_humidity  \
+    1925                    NaN  ...                NaN   
+    1926                    NaN  ...                NaN   
+    1927                    NaN  ...                NaN   
+    1928                    NaN  ...                NaN   
+    1929                    NaN  ...                NaN   
+    ...                     ...  ...                ...   
+    6611                   6.98  ...                NaN   
+    6612                  10.43  ...                NaN   
+    6613                    NaN  ...                NaN   
+    6614                    NaN  ...                NaN   
+    6615                    NaN  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    1925                              NaN                       NaN        NaN   
+    1926                              NaN                       NaN        NaN   
+    1927                              NaN                       NaN        NaN   
+    1928                              NaN                       NaN        NaN   
+    1929                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    6611                              NaN                       NaN        NaN   
+    6612                              NaN                       NaN        NaN   
+    6613                              NaN                       NaN        NaN   
+    6614                              NaN                       NaN        NaN   
+    6615                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    1925       NaN      NaN            NaN            NaN  159                june  
+    1926       NaN      NaN            NaN            NaN  159                june  
+    1927       NaN      NaN            NaN            NaN  159                june  
+    1928       NaN      NaN            NaN            NaN  159                june  
+    1929       NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    6611       NaN      NaN            NaN            NaN  226                None  
+    6612       NaN      NaN            NaN            NaN  226                None  
+    6613       NaN      NaN            NaN            NaN  226                None  
+    6614       NaN      NaN            NaN            NaN  226                None  
+    6615       NaN      NaN            NaN            NaN  226                None  
+
+    [900 rows x 68 columns]
+
+    growth_by_season(gala_chile_marom,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(gala_chile_marom,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    AGR_ratio(gala_chile_marom)
+
+                                low_Agr  mid_Agr  high_Agr  low_mid_ratio  \
+    0                            0.6342      NaN       NaN            NaN   
+    1                            0.6190      NaN       NaN            NaN   
+    2                            0.6650      NaN       NaN            NaN   
+    crop_load                       NaN      NaN       NaN            NaN   
+    relative_fruit_growth_rate      NaN      NaN       NaN            NaN   
+
+                                low_high_ratio  mid_high_ratio  
+    0                                      NaN             NaN  
+    1                                      NaN             NaN  
+    2                                      NaN             NaN  
+    crop_load                              NaN             NaN  
+    relative_fruit_growth_rate             NaN             NaN  
+
+    #lets compare fuji from talca,chile (picking at 09/04) and granny smith at matityahu farm (picking at 11/10)
+
+    granny=data[data['variety'].str.contains('granny')]
+    granny
+
+         cultivar       variety         block tree_number  fruit_number  \
+    3575    apple  granny_smith  gs_matityahu        1.00           1.0   
+    3576    apple  granny_smith  gs_matityahu        1.00           2.0   
+    3577    apple  granny_smith  gs_matityahu        1.00           3.0   
+    3578    apple  granny_smith  gs_matityahu        1.00           4.0   
+    3579    apple  granny_smith  gs_matityahu        1.00           5.0   
+    ...       ...           ...           ...         ...           ...   
+    4870    apple  granny_smith  gs_matityahu      random          96.0   
+    4871    apple  granny_smith  gs_matityahu      random          97.0   
+    4872    apple  granny_smith  gs_matityahu      random          98.0   
+    4873    apple  granny_smith  gs_matityahu      random          99.0   
+    4874    apple  granny_smith  gs_matityahu      random         100.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    3575           40.62              43.88      2022-06-10   
+    3576           44.90              43.88      2022-06-10   
+    3577           37.35              43.88      2022-06-10   
+    3578           46.79              43.88      2022-06-10   
+    3579           38.67              43.88      2022-06-10   
+    ...              ...                ...             ...   
+    4870           72.28              71.81      2022-10-11   
+    4871           73.70              71.81      2022-10-11   
+    4872           80.71              71.81      2022-10-11   
+    4873           79.90              71.81      2022-10-11   
+    4874           80.62              71.81      2022-10-11   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    3575                    NaN                    NaN  ...                NaN   
+    3576                    NaN                    NaN  ...                NaN   
+    3577                    NaN                    NaN  ...                NaN   
+    3578                    NaN                    NaN  ...                NaN   
+    3579                    NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    4870                   0.15                   22.3  ...                NaN   
+    4871                   0.15                   22.3  ...                NaN   
+    4872                   0.15                   22.3  ...                NaN   
+    4873                   0.15                   22.3  ...                NaN   
+    4874                   0.15                   22.3  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    3575                              NaN                       NaN        NaN   
+    3576                              NaN                       NaN        NaN   
+    3577                              NaN                       NaN        NaN   
+    3578                              NaN                       NaN        NaN   
+    3579                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    4870                              NaN                       NaN        NaN   
+    4871                              NaN                       NaN        NaN   
+    4872                              NaN                       NaN        NaN   
+    4873                              NaN                       NaN        NaN   
+    4874                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    3575       NaN      NaN     04/05/2022          turbo  161                june  
+    3576       NaN      NaN     26/07/2022         manual  161                june  
+    3577       NaN      NaN            NaN            NaN  161                june  
+    3578       NaN      NaN            NaN            NaN  161                june  
+    3579       NaN      NaN            NaN            NaN  161                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    4870       NaN      NaN            NaN            NaN  284                 oct  
+    4871       NaN      NaN            NaN            NaN  284                 oct  
+    4872       NaN      NaN            NaN            NaN  284                 oct  
+    4873       NaN      NaN            NaN            NaN  284                 oct  
+    4874       NaN      NaN            NaN            NaN  284                 oct  
+
+    [1300 rows x 68 columns]
+
+    growth_by_season(granny,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(granny,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    AGR_ratio(granny)
+
+                                low_Agr   mid_Agr  high_Agr  low_mid_ratio  \
+    0                               NaN  0.298063       NaN            NaN   
+    1                               NaN  0.317468       NaN            NaN   
+    2                               NaN  0.313356       NaN            NaN   
+    crop_load                       NaN       NaN       NaN            NaN   
+    relative_fruit_growth_rate      NaN       NaN       NaN            NaN   
+
+                                low_high_ratio  mid_high_ratio  
+    0                                      NaN             NaN  
+    1                                      NaN             NaN  
+    2                                      NaN             NaN  
+    crop_load                              NaN             NaN  
+    relative_fruit_growth_rate             NaN             NaN  
+
+    #fuji
+
+    fuji=data[data['variety'].str.contains('fuji')]
+    fuji
+
+         cultivar variety   block tree_number  fruit_number  fruit_diameter  \
+    6616    apple    fuji  tree_1        1.00           1.0           52.08   
+    6617    apple    fuji  tree_1        1.00           2.0           55.96   
+    6618    apple    fuji  tree_1        1.00           3.0           53.23   
+    6619    apple    fuji  tree_1        1.00           4.0           52.84   
+    6620    apple    fuji  tree_1        1.00           5.0           57.63   
+    ...       ...     ...     ...         ...           ...             ...   
+    7133    apple    fuji  tree_2        2.00          25.0           80.76   
+    7134    apple    fuji  tree_2        2.00          26.0           83.07   
+    7135    apple    fuji  tree_2        2.00          27.0           73.26   
+    7136    apple    fuji  tree_2        2.00          28.0             NaN   
+    7137    apple    fuji  tree_2        2.00          29.0           82.64   
+
+          Av_fruit_diameter date_of_measure  relative_mm_increment  \
+    6616              54.68      2021-01-27                    NaN   
+    6617              54.68      2021-01-27                    NaN   
+    6618              54.68      2021-01-27                    NaN   
+    6619              54.68      2021-01-27                    NaN   
+    6620              54.68      2021-01-27                    NaN   
+    ...                 ...             ...                    ...   
+    7133              80.35      2021-04-09                   0.54   
+    7134              80.35      2021-04-09                   0.11   
+    7135              80.35      2021-04-09                   0.33   
+    7136              80.35      2021-04-09                    NaN   
+    7137              80.35      2021-04-09                   0.20   
+
+          absolute_mm increment  ...  relative_humidity  \
+    6616                    NaN  ...                NaN   
+    6617                    NaN  ...                NaN   
+    6618                    NaN  ...                NaN   
+    6619                    NaN  ...                NaN   
+    6620                    NaN  ...                NaN   
+    ...                     ...  ...                ...   
+    7133                  16.11  ...                NaN   
+    7134                  17.51  ...                NaN   
+    7135                   7.37  ...                NaN   
+    7136                    NaN  ...                NaN   
+    7137                  19.52  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    6616                              NaN                       NaN        NaN   
+    6617                              NaN                       NaN        NaN   
+    6618                              NaN                       NaN        NaN   
+    6619                              NaN                       NaN        NaN   
+    6620                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    7133                              NaN                       NaN        NaN   
+    7134                              NaN                       NaN        NaN   
+    7135                              NaN                       NaN        NaN   
+    7136                              NaN                       NaN        NaN   
+    7137                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    6616       NaN      NaN            NaN            NaN  210                july  
+    6617       NaN      NaN            NaN            NaN  210                july  
+    6618       NaN      NaN            NaN            NaN  210                july  
+    6619       NaN      NaN            NaN            NaN  210                july  
+    6620       NaN      NaN            NaN            NaN  210                july  
+    ...        ...      ...            ...            ...  ...                 ...  
+    7133       NaN      NaN            NaN            NaN  282                 oct  
+    7134       NaN      NaN            NaN            NaN  282                 oct  
+    7135       NaN      NaN            NaN            NaN  282                 oct  
+    7136       NaN      NaN            NaN            NaN  282                 oct  
+    7137       NaN      NaN            NaN            NaN  282                 oct  
+
+    [522 rows x 68 columns]
+
+    growth_by_season(fuji,'doy','Av_fruit_diameter','tree_number', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(granny,'doy','relative_fruit_growth_rate','tree_number')
+
+[]
+
+    #let's compare pink lady at marom golan (picking at 25/10), Matityahu farm (11/10) and talca, chile (07/05)
+
+    #marom
+
+    pink_marom=data[data['block'].str.contains('pl_marom')]
+    pink_marom
+
+         cultivar    variety     block tree_number  fruit_number  fruit_diameter  \
+    875     apple  pink_lady  pl_marom        1.00           1.0           32.64   
+    876     apple  pink_lady  pl_marom        1.00           2.0           32.59   
+    877     apple  pink_lady  pl_marom        1.00           3.0           32.17   
+    878     apple  pink_lady  pl_marom        1.00           4.0           33.13   
+    879     apple  pink_lady  pl_marom        1.00           5.0           32.54   
+    ...       ...        ...       ...         ...           ...             ...   
+    1920    apple  pink_lady  pl_marom      random          96.0           78.63   
+    1921    apple  pink_lady  pl_marom      random          97.0           79.31   
+    1922    apple  pink_lady  pl_marom      random          98.0           70.85   
+    1923    apple  pink_lady  pl_marom      random          99.0           69.41   
+    1924    apple  pink_lady  pl_marom      random         100.0           72.12   
+
+          Av_fruit_diameter date_of_measure  relative_mm_increment  \
+    875               33.06      2022-06-08                    NaN   
+    876               33.06      2022-06-08                    NaN   
+    877               33.06      2022-06-08                    NaN   
+    878               33.06      2022-06-08                    NaN   
+    879               33.06      2022-06-08                    NaN   
+    ...                 ...             ...                    ...   
+    1920              77.46      2022-10-25                   4.55   
+    1921              77.46      2022-10-25                   4.55   
+    1922              77.46      2022-10-25                   4.55   
+    1923              77.46      2022-10-25                   4.55   
+    1924              77.46      2022-10-25                   4.55   
+
+          absolute_mm increment  ...  relative_humidity  \
+    875                     NaN  ...                NaN   
+    876                     NaN  ...                NaN   
+    877                     NaN  ...                NaN   
+    878                     NaN  ...                NaN   
+    879                     NaN  ...                NaN   
+    ...                     ...  ...                ...   
+    1920                   43.5  ...                NaN   
+    1921                   43.5  ...                NaN   
+    1922                   43.5  ...                NaN   
+    1923                   43.5  ...                NaN   
+    1924                   43.5  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    875                               NaN                       NaN        NaN   
+    876                               NaN                       NaN        NaN   
+    877                               NaN                       NaN        NaN   
+    878                               NaN                       NaN        NaN   
+    879                               NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    1920                              NaN                       NaN        NaN   
+    1921                              NaN                       NaN        NaN   
+    1922                              NaN                       NaN        NaN   
+    1923                              NaN                       NaN        NaN   
+    1924                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    875        NaN      NaN            NaN            NaN  159                june  
+    876        NaN      NaN            NaN            NaN  159                june  
+    877        NaN      NaN            NaN            NaN  159                june  
+    878        NaN      NaN            NaN            NaN  159                june  
+    879        NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    1920       NaN      NaN            NaN            NaN  298                 oct  
+    1921       NaN      NaN            NaN            NaN  298                 oct  
+    1922       NaN      NaN            NaN            NaN  298                 oct  
+    1923       NaN      NaN            NaN            NaN  298                 oct  
+    1924       NaN      NaN            NaN            NaN  298                 oct  
+
+    [1050 rows x 68 columns]
+
+    growth_by_season(pink_marom,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(pink_marom,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #matityahu
+
+    pink_matityahu=data[data['block'].str.contains('pl_matityahu')]
+    pink_matityahu
+
+         cultivar    variety         block tree_number  fruit_number  \
+    4875    apple  pink_lady  pl_matityahu        1.00           1.0   
+    4876    apple  pink_lady  pl_matityahu        1.00           2.0   
+    4877    apple  pink_lady  pl_matityahu        1.00           3.0   
+    4878    apple  pink_lady  pl_matityahu        1.00           4.0   
+    4879    apple  pink_lady  pl_matityahu        1.00           5.0   
+    ...       ...        ...           ...         ...           ...   
+    5995    apple  pink_lady  pl_matityahu      random          96.0   
+    5996    apple  pink_lady  pl_matityahu      random          97.0   
+    5997    apple  pink_lady  pl_matityahu      random          98.0   
+    5998    apple  pink_lady  pl_matityahu      random          99.0   
+    5999    apple  pink_lady  pl_matityahu      random         100.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    4875           28.66              34.88      2022-06-10   
+    4876           34.40              34.88      2022-06-10   
+    4877           36.47              34.88      2022-06-10   
+    4878           33.96              34.88      2022-06-10   
+    4879           37.35              34.88      2022-06-10   
+    ...              ...                ...             ...   
+    5995           62.11              68.95      2022-10-11   
+    5996           59.89              68.95      2022-10-11   
+    5997           72.42              68.95      2022-10-11   
+    5998           71.78              68.95      2022-10-11   
+    5999           74.20              68.95      2022-10-11   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    4875                    NaN                    NaN  ...                NaN   
+    4876                    NaN                    NaN  ...                NaN   
+    4877                    NaN                    NaN  ...                NaN   
+    4878                    NaN                    NaN  ...                NaN   
+    4879                    NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    5995                   3.18                  25.86  ...                NaN   
+    5996                   3.18                  25.86  ...                NaN   
+    5997                   3.18                  25.86  ...                NaN   
+    5998                   3.18                  25.86  ...                NaN   
+    5999                   3.18                  25.86  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    4875                              NaN                       NaN        NaN   
+    4876                              NaN                       NaN        NaN   
+    4877                              NaN                       NaN        NaN   
+    4878                              NaN                       NaN        NaN   
+    4879                              NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    5995                              NaN                       NaN        NaN   
+    5996                              NaN                       NaN        NaN   
+    5997                              NaN                       NaN        NaN   
+    5998                              NaN                       NaN        NaN   
+    5999                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    4875       NaN      NaN     12/07/2023         manual  161                june  
+    4876       NaN      NaN            NaN            NaN  161                june  
+    4877       NaN      NaN            NaN            NaN  161                june  
+    4878       NaN      NaN            NaN            NaN  161                june  
+    4879       NaN      NaN            NaN            NaN  161                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    5995       NaN      NaN            NaN            NaN  284                 oct  
+    5996       NaN      NaN            NaN            NaN  284                 oct  
+    5997       NaN      NaN            NaN            NaN  284                 oct  
+    5998       NaN      NaN            NaN            NaN  284                 oct  
+    5999       NaN      NaN            NaN            NaN  284                 oct  
+
+    [1125 rows x 68 columns]
+
+    growth_by_season(pink_matityahu,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(pink_matityahu,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #marom and matityahu
+
+    pink_marom_matityahu=data[data['block'].str.contains('pl_matityahu|pl_marom')]
+    pink_marom_matityahu
+
+         cultivar    variety         block tree_number  fruit_number  \
+    875     apple  pink_lady      pl_marom        1.00           1.0   
+    876     apple  pink_lady      pl_marom        1.00           2.0   
+    877     apple  pink_lady      pl_marom        1.00           3.0   
+    878     apple  pink_lady      pl_marom        1.00           4.0   
+    879     apple  pink_lady      pl_marom        1.00           5.0   
+    ...       ...        ...           ...         ...           ...   
+    5995    apple  pink_lady  pl_matityahu      random          96.0   
+    5996    apple  pink_lady  pl_matityahu      random          97.0   
+    5997    apple  pink_lady  pl_matityahu      random          98.0   
+    5998    apple  pink_lady  pl_matityahu      random          99.0   
+    5999    apple  pink_lady  pl_matityahu      random         100.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    875            32.64              33.06      2022-06-08   
+    876            32.59              33.06      2022-06-08   
+    877            32.17              33.06      2022-06-08   
+    878            33.13              33.06      2022-06-08   
+    879            32.54              33.06      2022-06-08   
+    ...              ...                ...             ...   
+    5995           62.11              68.95      2022-10-11   
+    5996           59.89              68.95      2022-10-11   
+    5997           72.42              68.95      2022-10-11   
+    5998           71.78              68.95      2022-10-11   
+    5999           74.20              68.95      2022-10-11   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    875                     NaN                    NaN  ...                NaN   
+    876                     NaN                    NaN  ...                NaN   
+    877                     NaN                    NaN  ...                NaN   
+    878                     NaN                    NaN  ...                NaN   
+    879                     NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    5995                   3.18                  25.86  ...                NaN   
+    5996                   3.18                  25.86  ...                NaN   
+    5997                   3.18                  25.86  ...                NaN   
+    5998                   3.18                  25.86  ...                NaN   
+    5999                   3.18                  25.86  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    875                               NaN                       NaN        NaN   
+    876                               NaN                       NaN        NaN   
+    877                               NaN                       NaN        NaN   
+    878                               NaN                       NaN        NaN   
+    879                               NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    5995                              NaN                       NaN        NaN   
+    5996                              NaN                       NaN        NaN   
+    5997                              NaN                       NaN        NaN   
+    5998                              NaN                       NaN        NaN   
+    5999                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    875        NaN      NaN            NaN            NaN  159                june  
+    876        NaN      NaN            NaN            NaN  159                june  
+    877        NaN      NaN            NaN            NaN  159                june  
+    878        NaN      NaN            NaN            NaN  159                june  
+    879        NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    5995       NaN      NaN            NaN            NaN  284                 oct  
+    5996       NaN      NaN            NaN            NaN  284                 oct  
+    5997       NaN      NaN            NaN            NaN  284                 oct  
+    5998       NaN      NaN            NaN            NaN  284                 oct  
+    5999       NaN      NaN            NaN            NaN  284                 oct  
+
+    [2175 rows x 68 columns]
+
+    growth_by_season(pink_marom_matityahu,'doy','Av_fruit_diameter','N.fruit_per_dunam', degree=2)
+
+[]
+
+[]
+
+    #only st the end of july it is possiblr to see the effect of the crop load on eventually fruit size
+
+    Relative_growth_rate(pink_marom_matityahu,'doy','relative_fruit_growth_rate','N.fruit_per_dunam')
+
+[]
+
+    #rgr is not affedcted by crop load in the beginning of the season 
+
+    AGR_ratio(pink_marom_matityahu)
+
+                                low_Agr  mid_Agr  high_Agr  low_mid_ratio  \
+    0                           0.34504      NaN  0.325959            NaN   
+    1                           0.33400      NaN  0.325180            NaN   
+    2                           0.34608      NaN  0.312324            NaN   
+    crop_load                       NaN      NaN       NaN            NaN   
+    relative_fruit_growth_rate      NaN      NaN       NaN            NaN   
+
+                                low_high_ratio  mid_high_ratio  
+    0                                      NaN             NaN  
+    1                                      NaN             NaN  
+    2                                      NaN             NaN  
+    crop_load                         0.269608             NaN  
+    relative_fruit_growth_rate        1.063996             NaN  
+
+    #pink lady at marom golan, matityahu farm and talca chile
+
+    pink_marom_matityahu_talca=data[data['variety'].str.contains('pink')]
+    pink_marom_matityahu_talca
+
+         cultivar    variety        block tree_number  fruit_number  \
+    875     apple  pink_lady     pl_marom        1.00           1.0   
+    876     apple  pink_lady     pl_marom        1.00           2.0   
+    877     apple  pink_lady     pl_marom        1.00           3.0   
+    878     apple  pink_lady     pl_marom        1.00           4.0   
+    879     apple  pink_lady     pl_marom        1.00           5.0   
+    ...       ...        ...          ...         ...           ...   
+    7887    apple  pink lady  talca_chile        2.00          25.0   
+    7888    apple  pink lady  talca_chile        2.00          26.0   
+    7889    apple  pink lady  talca_chile        2.00          27.0   
+    7890    apple  pink lady  talca_chile        2.00          28.0   
+    7891    apple  pink lady  talca_chile        2.00          29.0   
+
+          fruit_diameter  Av_fruit_diameter date_of_measure  \
+    875            32.64              33.06      2022-06-08   
+    876            32.59              33.06      2022-06-08   
+    877            32.17              33.06      2022-06-08   
+    878            33.13              33.06      2022-06-08   
+    879            32.54              33.06      2022-06-08   
+    ...              ...                ...             ...   
+    7887           66.50              66.18      2021-05-07   
+    7888           67.71              66.18      2021-05-07   
+    7889           63.95              66.18      2021-05-07   
+    7890           61.06              66.18      2021-05-07   
+    7891           65.59              66.18      2021-05-07   
+
+          relative_mm_increment  absolute_mm increment  ...  relative_humidity  \
+    875                     NaN                    NaN  ...                NaN   
+    876                     NaN                    NaN  ...                NaN   
+    877                     NaN                    NaN  ...                NaN   
+    878                     NaN                    NaN  ...                NaN   
+    879                     NaN                    NaN  ...                NaN   
+    ...                     ...                    ...  ...                ...   
+    7887                   0.35                  16.25  ...                NaN   
+    7888                   0.74                  19.42  ...                NaN   
+    7889                   0.09                  17.57  ...                NaN   
+    7890                   0.08                  15.13  ...                NaN   
+    7891                   0.68                  16.07  ...                NaN   
+
+          total_relative_radiation(Mj/m2) total_radiation_per_month peel_color  \
+    875                               NaN                       NaN        NaN   
+    876                               NaN                       NaN        NaN   
+    877                               NaN                       NaN        NaN   
+    878                               NaN                       NaN        NaN   
+    879                               NaN                       NaN        NaN   
+    ...                               ...                       ...        ...   
+    7887                              NaN                       NaN        NaN   
+    7888                              NaN                       NaN        NaN   
+    7889                              NaN                       NaN        NaN   
+    7890                              NaN                       NaN        NaN   
+    7891                              NaN                       NaN        NaN   
+
+         longitude latitude  thinning_time  thinning_type  doy  date_of_year_group  
+    875        NaN      NaN            NaN            NaN  159                june  
+    876        NaN      NaN            NaN            NaN  159                june  
+    877        NaN      NaN            NaN            NaN  159                june  
+    878        NaN      NaN            NaN            NaN  159                june  
+    879        NaN      NaN            NaN            NaN  159                june  
+    ...        ...      ...            ...            ...  ...                 ...  
+    7887       NaN      NaN            NaN            NaN  310                 nov  
+    7888       NaN      NaN            NaN            NaN  310                 nov  
+    7889       NaN      NaN            NaN            NaN  310                 nov  
+    7890       NaN      NaN            NaN            NaN  310                 nov  
+    7891       NaN      NaN            NaN            NaN  310                 nov  
+
+    [2929 rows x 68 columns]
+
+    growth_by_season(pink_marom_matityahu_talca,'doy','Av_fruit_diameter','block', degree=2)
+
+[]
+
+[]
+
+    Relative_growth_rate(pink_marom_matityahu_talca,'doy','relative_fruit_growth_rate','block')
+
+[]
+
+    #from the end of march, the fruit in chile is not growing, might be beacause of cold whether, water stress or heavy crop load
